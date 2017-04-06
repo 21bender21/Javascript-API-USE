@@ -1,0 +1,23 @@
+﻿.jumbotron {text-align: center;
+            font-size:28px;
+}
+
+div{
+    display: inline-block;
+}
+#forecast{
+    display: inline-block;
+}
+/*#cityImg{
+    float:right
+}*/
+#forecast{
+    
+    
+    display: inline-flex;
+        
+}
+#cityImg{
+    height:200px;
+    width:400px;
+}

@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link href="Content/bootstrap.css" rel="stylesheet" />
+    <link href="extras.css" rel="stylesheet" />
+    <title></title>
+	<meta charset="utf-8" />
+    <script src="Scripts/jquery-3.1.1.js"></script>
+</head>
+<body onload="">
+    <header class="jumbotron">Fantastic Getaway Destination Weather!</header>
+    <form id ="cityAdd">
+    <input type ="text" id="enterCity" name="city" placeholder="Add another City!" required="required" />
+    <input type ="text" id="desc" name="description" placeholder="describe the city!" required="required" />
+    <input type="url" id="cityImge" name="cityImg" placeholder="www.imghome.com" required="required" />
+    <input type ="button" id="addCity" name="addButton" value="Add City" />
+        <input type="button" id="clear" value="clear" />
+    </form>
+        <select id="cityList">
+        <option  id="chicago" value="Chicago" >Chicago</option>
+        <option id="cincy" value="Cincinnati">Cincinnati</option>
+        <option id ="sanfran" value ="SanFran">San Francisco</option>
+            
+    </select>
+    <input type="button" value="Show me this City!" id="getCity" /> <br />
+    
+        <div id="cityContainer"></div><br /><div id="descriptionContainer"><br /></div><div id="forecast"></div><br />
+    <img  id="cityImg" src="" />
+    <script>
+        var iconPath = "http://openweathermap.org/img/w/"
+        var c = new City();
+        function City() {
+            this.name = "";
+            this.description = "";
+            this.img = "";
+
+        };
+        var citList = [];
+        c.name = "Chicago";
+        c.description = "A windy city by lake michigan";
+        c.img = "chi.jpg";
+        citList.push(c);
+        c = new City();
+        c.name = "Cincinnati";
+        c.description = "The queen city, a river focused town";
+        c.img = "cin.jpg";
+        citList.push(c);
+        c = new City();
+        c.name = "San Francisco";
+        c.description = "A fantastic city that lives by a bay!";
+        c.img = "sanF.jpg";
+        citList.push(c);
+
+        //$("#clear").click(function () {
+        //    $("#enterCity").val("");
+        //    $("#desc").val("");
+        //    $("#cityImge").val("");
+        //})
+
+        $("#addCity").click(function () {
+            
+            c = new City();
+            c.name = $("#enterCity").val();
+            c.description = $("#desc").val();
+            c.img = $("#cityImge").val();
+            citList.push(c);
+            $("#enterCity").val("");
+            $("#desc").val("");
+            $("#cityImge").val("");
+          
+                var opt = document.createElement('option');
+                opt.innerHTML = c.name;
+                opt.value = c.name;
+                $("#cityList").append(opt);
+            
+        })
+        
+        ;
+
+        //for (var i = 0; i < citList.length; i++) {
+        //    var opt = document.createElement('option');
+        //    opt.innerHTML = citList[i];
+        //    opt.value = citList[i];
+        //    $("#cityList").appendChild(opt);
+        //}
+        
+
+        $("#getCity").click( function () {
+            var selectedCity = $("#cityList option:selected")[0].text;
+            $("#forecast").empty();
+            for (var i = 0; i < citList.length; i++) {
+                
+                if (citList[i].name == selectedCity) {
+                    
+                    $("#cityContainer").text(citList[i].name);
+                    $("#descriptionContainer").text(citList[i].description);
+                    $("#cityImg").attr("src", citList[i].img);
+                    var weatherApi = "http://api.openweathermap.org/data/2.5/forecast?q=" + citList[i].name + "&cnt=5&id=524901&APPID=73a53ff1af629b7656f1a26f9136d750&units=imperial";
+                    $.getJSON(weatherApi, "",
+                        function (d) {
+                            
+                            $.each(d.list, function () {
+                                f = $(this).get(0);
+                                var dateInfo = f.dt_txt;
+                                var low = f.main.temp_min;
+                                var high = f.main.temp_max;
+                                var cond = f.weather[0].main;
+                                var icon = "<img src='" + iconPath + f.weather[0].icon + ".png'>"
+                                $("#forecast")[0].innerHTML += ("<br>" + "<br>" + "Day: " + dateInfo + "<br>High:" + high + "<br> Low:" + low + "<br>Conditions:" + cond + "<br>" + icon + "<br><br>");
+                                
+                            });
+
+                        });
+                }
+            }
+        });
+        //$("#clear").click(function () {
+        //    $("#forecast").empty();
+        //});
+       
+
+       //    function cities() {
+       //        var create = "<select id=citList>";
+
+       //        for (var i = 0; i < cities.length; i++) {
+       //            create += '<option value="' + cities[i] + '">' + cities[i] + '</option>';
+       //        };
+       //        create += '</select>';
+       //        $("#citList").append(create);
+       //    };
+       //});
+    </script>
+</body>
+</html>
